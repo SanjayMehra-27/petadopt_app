@@ -10,6 +10,7 @@ class Pet {
   final String? location;
   final bool isMale;
   bool? isAdoptedAlready;
+  DateTime? adoptedDate;
 
   Pet({
     required this.id,
@@ -23,5 +24,6 @@ class Pet {
     this.location,
     this.breedName,
     this.isAdoptedAlready,
+    this.adoptedDate,
   });
 }
