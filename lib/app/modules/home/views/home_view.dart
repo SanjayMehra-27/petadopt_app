@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:petadopt_app/app/custom/colors/custom_app_colors.dart';
 import 'package:petadopt_app/app/data/pets/pets_data_list.dart';
+import 'package:petadopt_app/app/modules/pet_details/bindings/pet_details_binding.dart';
+import '../../../widgets/custom_chip/custom_app_chip.dart';
+import '../../pet_details/views/pet_details_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -39,97 +43,91 @@ class PetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.all(10),
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: Offset(0, 1), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => PetDetailsView(pet: pet), binding: PetDetailsBinding());
+      },
+      child: Container(
+          margin: EdgeInsets.all(10),
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: Offset(0, 1), // changes position of shadow
               ),
-              child: Image.network(
-                pet.image,
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 120,
-                    width: double.infinity,
-                    color: Colors.grey[200],
-                    child: Center(
-                      child: Text(
-                        "Image not found",
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 12,
+            ],
+          ),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Image.network(
+                  pet.image,
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 120,
+                      width: double.infinity,
+                      color: Colors.grey[200],
+                      child: Center(
+                        child: Text(
+                          "Image not found",
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "${pet.name}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "${pet.name}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        child: Text("(${pet.breedName})",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.grey[400])),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 125, 46, 252).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                          child: Text("(${pet.breedName})",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.grey[400])),
+                        ),
+                      ],
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    child: Text(
-                      "${pet.isMale ? 'Male' : 'Female'}, ${pet.age} yrs",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 125, 46, 252),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    SizedBox(
+                      height: 8,
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ));
+                    CustomAppChip(
+                      text: "${pet.isMale ? 'Male' : 'Female'}, ${pet.age} yrs",
+                      color: CustomAppColor.primaryColor,
+                    )
+                  ],
+                ),
+              )
+            ],
+          )),
+    );
   }
 }
 
