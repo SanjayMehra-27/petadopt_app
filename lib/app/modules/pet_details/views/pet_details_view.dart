@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petadopt_app/app/custom/colors/custom_app_colors.dart';
 import 'package:petadopt_app/app/widgets/full_image_viewer/full_image_viewer.dart';
-
-import '../../../data/pets/pets_data_list.dart';
+import '../../../models/pet/pet_model.dart';
 import '../../../widgets/custom_chip/custom_app_chip.dart';
 import '../controllers/pet_details_controller.dart';
 
@@ -221,33 +220,42 @@ class PetDetailsView extends GetView<PetDetailsController> {
             bottom: 20,
             left: 0,
             right: 0,
-            child: Container(
+            child: Obx(() => Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 height: 50,
                 width: Get.width,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: CustomAppColor.primaryColor,
+                      primary: controller.isAlreadyAdopted.value ||
+                              pet?.isAdoptedAlready == true
+                          ? Colors.grey
+                          : CustomAppColor.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
-                    child: Text(
-                      "Adopt Me",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      // show the popup with a confetti
-                      controller.showConfetti();
-                      // show adopt me dialog
-                      _openAdoptMeSuccessDialog();
-                    })),
+                    child: controller.isLoading.value
+                        ? Container(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            controller.isAlreadyAdopted.value ||
+                                    pet?.isAdoptedAlready == true
+                                ? "Already Adopted"
+                                : "Adopt Me",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            )),
+                    onPressed: () async =>
+                        await controller.onAdoptMeButtonPressed(pet)))),
           ),
-          // view full image icon on top right
+          //? view full image icon on top right
           if (pet != null)
             Positioned(
               top: 40,
@@ -284,22 +292,5 @@ class PetDetailsView extends GetView<PetDetailsController> {
         ],
       ),
     ));
-  }
-
-  void _openAdoptMeSuccessDialog() {
-    Get.dialog(
-      AlertDialog(
-        title: Text("Thank you!"),
-        content: Text("You've now adopted ${pet?.name}!"),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text("OKAY"),
-          ),
-        ],
-      ),
-      barrierColor: Colors.black.withOpacity(0.1),
-      barrierDismissible: false,
-    );
   }
 }
