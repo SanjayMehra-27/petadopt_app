@@ -26,9 +26,19 @@ class PetRepository {
   Future<bool> adoptPet(int id) async {
     bool isUpdated = false;
     await Future.delayed(Duration(milliseconds: 500), () {
-      pets.firstWhere((pet) => pet.id == id).isAdoptedAlready = true;
+      pets.firstWhere((pet) => pet.id == id)
+        ..isAdoptedAlready = true
+        ..adoptedDate = DateTime.now();
       isUpdated = true;
     });
     return isUpdated;
+  }
+
+  // 5. Get adopted pets list with chronological order
+  Future<List<Pet>> getAdoptedPets() async {
+    return await Future.delayed(
+        Duration(milliseconds: 300),
+        () => pets.where((pet) => pet.isAdoptedAlready == true).toList()
+          ..sort((a, b) => b.adoptedDate!.compareTo(a.adoptedDate!)));
   }
 }
