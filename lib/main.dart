@@ -8,6 +8,7 @@ void main() {
   runApp(
     GetMaterialApp(
       title: "Pet Adoption App",
+      debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
