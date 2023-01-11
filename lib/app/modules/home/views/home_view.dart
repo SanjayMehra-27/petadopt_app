@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:petadopt_app/app/custom/colors/custom_app_colors.dart';
 import 'package:petadopt_app/app/modules/pet_details/bindings/pet_details_binding.dart';
+import 'package:petadopt_app/app/services/theme_service/theme_service.dart';
 import '../../../models/pet/pet_model.dart';
 import '../../../widgets/custom_chip/custom_app_chip.dart';
 import '../../pet_details/views/pet_details_view.dart';
@@ -18,6 +19,22 @@ class HomeView extends GetView<HomeController> {
       child: Scaffold(
           appBar: AppBar(
             title: SearchBar(),
+            actions: [
+              // switch theme icon
+              GestureDetector(
+                onTap: () {
+                  Get.find<ThemeService>().switchTheme();
+                },
+                child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Icon(
+                      Get.isDarkMode
+                          ? Icons.lightbulb_outline
+                          : Icons.lightbulb,
+                      color: IconTheme.of(context).color,
+                    )),
+              ),
+            ],
             toolbarHeight: 100,
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -72,48 +89,51 @@ class PetCard extends StatelessWidget {
               foregroundDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: pet.isAdoptedAlready == true
-                    ? Colors.grey.withOpacity(0.2)
+                    ? Get.isDarkMode == true
+                        ? Colors.black.withOpacity(0.5)
+                        : Colors.white.withOpacity(0.4)
                     : null,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 2,
+                    color: Colors.grey.withOpacity(0.2),
                     offset: Offset(0, 1), // changes position of shadow
                   ),
                 ],
               ),
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Image.network(
-                      pet.image,
-                      height: 120,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 120,
-                          width: double.infinity,
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: Text(
-                              "Image not found",
-                              style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 12,
+                  Hero(
+                    tag: pet.id,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Image.network(
+                        pet.image,
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 120,
+                            width: double.infinity,
+                            color: Colors.grey[200],
+                            child: Center(
+                              child: Text(
+                                "Image not found",
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -146,7 +166,9 @@ class PetCard extends StatelessWidget {
                         CustomAppChip(
                           text:
                               "${pet.isMale ? 'Male' : 'Female'}, ${pet.age} yrs",
-                          color: CustomAppColor.primaryColor,
+                          color: Get.isDarkMode
+                              ? Colors.white
+                              : CustomAppColor.primaryColor,
                         )
                       ],
                     ),

@@ -10,7 +10,9 @@ import '../controllers/pet_details_controller.dart';
 
 class PetDetailsView extends GetView<PetDetailsController> {
   final Pet? pet;
-  const PetDetailsView({Key? key, this.pet}) : super(key: key);
+  final bool? fromHistoryPage;
+  const PetDetailsView({Key? key, this.pet, this.fromHistoryPage = false})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +38,31 @@ class PetDetailsView extends GetView<PetDetailsController> {
                   );
                 },
                 child: InteractiveViewer(
-                  child: Container(
-                    height: Get.height * 0.6,
-                    width: Get.width,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(pet!.image),
-                        fit: BoxFit.cover,
+                  child: Hero(
+                    tag: fromHistoryPage == true
+                        ? "history-${pet?.id}"
+                        : pet!.id,
+                    flightShuttleBuilder: (flightContext, animation,
+                        flightDirection, fromHeroContext, toHeroContext) {
+                      final Hero toHero = toHeroContext.widget as Hero;
+                      return fromHistoryPage == true
+                          ? FadeTransition(
+                              opacity: animation,
+                              child: toHero.child,
+                            )
+                          : RotationTransition(
+                              turns: animation,
+                              child: toHero.child,
+                            );
+                    },
+                    child: Container(
+                      height: Get.height * 0.6,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(pet!.image),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -66,7 +86,7 @@ class PetDetailsView extends GetView<PetDetailsController> {
                       topRight: Radius.circular(25),
                     ),
                   ),
-                  color: Color(0xFFF0F0F0),
+                  color: Get.isDarkMode ? Colors.grey[900] : Color(0xFFF0F0F0),
                   elevation: 2.0,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,15 +97,15 @@ class PetDetailsView extends GetView<PetDetailsController> {
                         padding: EdgeInsets.all(20),
                         height: 140,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context)
+                              .scaffoldBackgroundColor, //? card color
                           borderRadius: BorderRadius.all(Radius.circular(14)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.4),
-                              spreadRadius: 0,
-                              blurRadius: 2,
-                              offset:
-                                  Offset(0, 1), // changes position of shadow
+                              color: Get.isDarkMode
+                                  ? Colors.grey[800]!
+                                  : Colors.white.withOpacity(
+                                      0.4), // changes position of shadow
                             ),
                           ],
                         ),
@@ -195,16 +215,8 @@ class PetDetailsView extends GetView<PetDetailsController> {
               height: 40,
               width: 40,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.4),
-                    spreadRadius: 0,
-                    blurRadius: 2,
-                    offset: Offset(0, 1), // changes position of shadow
-                  ),
-                ],
               ),
               child: Align(
                 alignment: Alignment.center,
@@ -264,16 +276,8 @@ class PetDetailsView extends GetView<PetDetailsController> {
                 height: 40,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.4),
-                      spreadRadius: 0,
-                      blurRadius: 2,
-                      offset: Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
                 ),
                 child: Align(
                   alignment: Alignment.center,

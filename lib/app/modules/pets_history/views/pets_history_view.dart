@@ -37,11 +37,13 @@ class PetsHistoryView extends GetView<PetsHistoryController> {
       },
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             elevation: 0,
             title: Text(
               "Adopted Pets",
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyText1?.color ??
+                      Colors.black),
             ),
             centerTitle: true,
           ),
@@ -93,12 +95,20 @@ class AdoptedPetTile extends StatelessWidget {
       elevation: 0.1,
       child: ListTile(
         contentPadding: EdgeInsets.all(10),
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(pet.image),
-          radius: 30,
+        leading: Hero(
+          tag: "history-${pet.id}",
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(pet.image),
+            radius: 30,
+          ),
         ),
         onTap: () {
-          Get.to(() => PetDetailsView(pet: pet), binding: PetDetailsBinding());
+          Get.to(
+              () => PetDetailsView(
+                    pet: pet,
+                    fromHistoryPage: true,
+                  ),
+              binding: PetDetailsBinding());
         },
         title: Text(pet.name, style: TextStyle(fontSize: 20)),
         subtitle: Text(pet.breedName ?? '', style: TextStyle(fontSize: 15)),

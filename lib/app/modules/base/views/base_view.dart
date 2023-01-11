@@ -16,7 +16,7 @@ class BaseView extends GetView<BaseController> {
           () => Container(
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.5),
@@ -29,7 +29,7 @@ class BaseView extends GetView<BaseController> {
             child: BottomNavigationBar(
               currentIndex: controller.currentIndex.value,
               onTap: controller.onChangeTab,
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               elevation: 2.0,
               items: [
                 BottomNavigationBarItem(
@@ -41,7 +41,8 @@ class BaseView extends GetView<BaseController> {
                   label: 'History',
                 ),
               ],
-              selectedItemColor: Colors.blue[900],
+              selectedItemColor:
+                  Get.isDarkMode ? Colors.white : Colors.blue[900],
               selectedFontSize: 12,
               selectedIconTheme: IconThemeData(size: 35),
             ),
