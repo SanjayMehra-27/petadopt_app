@@ -52,7 +52,8 @@ class HomeView extends GetView<HomeController> {
                   controller.petList.length > 0
                       ? GridView.count(
                           crossAxisCount: 2,
-                          childAspectRatio: Get.width / (Get.height / 1.9),
+                          childAspectRatio: 0.9,
+                          key: PageStorageKey("petsList"),
                           children:
                               List.generate(controller.petList.length, (index) {
                             return PetCard(pet: controller.petList[index]);
@@ -104,76 +105,79 @@ class PetCard extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                children: [
-                  Hero(
-                    tag: pet.id,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Image.network(
-                        pet.image,
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 120,
-                            width: double.infinity,
-                            color: Colors.grey[200],
-                            child: Center(
-                              child: Text(
-                                "Image not found",
-                                style: TextStyle(
-                                  color: Colors.grey[400],
-                                  fontSize: 12,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Hero(
+                      tag: pet.id,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Image.network(
+                          pet.image,
+                          semanticLabel: "Pet Image",
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 120,
+                              width: double.infinity,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Text(
+                                  "Image not found",
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "${pet.name}",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${pet.name}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              child: Text("(${pet.breedName})",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.grey[400])),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        CustomAppChip(
-                          text:
-                              "${pet.isMale ? 'Male' : 'Female'}, ${pet.age} yrs",
-                          color: Get.isDarkMode
-                              ? Colors.white
-                              : CustomAppColor.primaryColor,
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                child: Text("(${pet.breedName})",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey[400])),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          CustomAppChip(
+                            text:
+                                "${pet.isMale ? 'Male' : 'Female'}, ${pet.age} yrs",
+                            color: Get.isDarkMode
+                                ? Colors.white
+                                : CustomAppColor.primaryColor,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               )),
           pet.isAdoptedAlready == true
               ? Positioned(
