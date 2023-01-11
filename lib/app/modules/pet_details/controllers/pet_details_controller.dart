@@ -45,7 +45,9 @@ class PetDetailsController extends GetxController {
     } finally {
       isLoading.value = false;
       // hide confetti
-      confettiController.stop();
+      Future.delayed(const Duration(seconds: 10), () {
+        confettiController.stop();
+      });
     }
   }
 

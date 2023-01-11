@@ -4,7 +4,7 @@ import '../../models/pet/pet_model.dart';
 class PetRepository {
   // 1. Get pets list
   Future<List<Pet>> getPets() async {
-    return await Future.delayed(Duration(seconds: 2), () => pets);
+    return await Future.delayed(Duration.zero, () => pets);
   }
 
   // 2. Get pet by id
