@@ -6,7 +6,7 @@ import '../../../models/pet/pet_model.dart';
 
 class HomeController extends GetxController {
   final PetRepository petRepository = PetRepository();
-  final RxList<Pet> petList = pets.obs;
+  final RxList<Pet> petList = RxList<Pet>([]);
   final isLoading = false.obs;
   @override
   void onInit() {
