@@ -16,7 +16,7 @@ class HomeView extends GetView<HomeController> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: SearchBar(),
+            // title: SearchBar(),
             actions: [
               // switch theme icon
               GestureDetector(
